@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase/config";
 import { ref, onValue, push, set } from "firebase/database";
+import { useNavigate } from "react-router-dom";
 
 import React from "react";
 import {
@@ -19,6 +20,8 @@ export default function VocatuxDashboard() {
     const [nomeTurma, setNomeTurma] = useState("");
     const [quantidadeAlunos, setQuantidadeAlunos] = useState("");
     const [mostrarModal, setMostrarModal] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const turmasRef = ref(db, "/turmas");
@@ -47,11 +50,11 @@ const adicionarTurma = async () => {
     .toLowerCase()
     .replaceAll(" ", "-");
 
-  await set(ref(db, `turmas/${idTurma}`), {
-    nome: nomeTurma,
-    alunos: Number(quantidadeAlunos),
-    criadaEm: new Date().toISOString(),
-  });
+await set(ref(db, `turmas/${idTurma}`), {
+  id: idTurma,
+  nome: nomeTurma,
+  alunos: Number(quantidadeAlunos),
+});
 
   setNomeTurma("");
   setQuantidadeAlunos("");
@@ -199,6 +202,7 @@ const adicionarTurma = async () => {
                     {turmas.map((turma, index) => (
                         <div
                             key={index}
+                            onClick={() => navigate(`/turma/${turma.id}`)}
                             className="group relative rounded-[30px] border border-purple-500/20 bg-gradient-to-br from-[#11152B] to-[#0A0D1D] p-8 overflow-hidden hover:border-[#39FF88]/40 transition-all duration-500 hover:-translate-y-2 shadow-[0_0_35px_rgba(124,58,237,0.08)]"
                         >
                             {/* Glow */}
